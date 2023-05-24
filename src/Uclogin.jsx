@@ -1,10 +1,10 @@
 import * as React from 'react';
 import AppBar from "@mui/material/AppBar";
-import { Button, Toolbar} from "@mui/material";
+import { Box, Button, Toolbar} from "@mui/material";
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from './univcomm-logo-transparent.png';
 import { useState } from 'react';
 
@@ -44,6 +44,10 @@ function Uclogin() {
                     <Grid align='center' >
                     <h1 style={{padding:"20px 20px", backgroundColor: "white", color:"#008080"}}>LOGIN</h1>
                     </Grid>
+                    <Box component="div" sx={{padding: "0px 20px", display: "flex", alignItems: "center"}}>
+                    <h3>or</h3>&nbsp;
+                    <Link style={{ color:"#008080"}} to="/register">Register</Link>
+                    </Box>
                     <form onSubmit={handleSubmit} style={{padding:"20px 20px"}}>
                         <TextField required variant="standard" value={email} onChange={handleEmail} type="email" fullWidth label="Email"/>
                         <TextField required variant="standard" value={pass} onChange={handlePass} type="password" fullWidth label="Password"/>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import AppBar from "@mui/material/AppBar";
-import { Button, Toolbar} from "@mui/material";
+import { Box, Button, Toolbar} from "@mui/material";
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -9,7 +9,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from './univcomm-logo-transparent.png';
 import { useState } from 'react';
 
@@ -34,17 +34,18 @@ function Ucreg() {
     const navigate=useNavigate();
     function handleSubmit(e){
         e.preventDefault();
-        axios.post('http://localhost:8000/api/v1/users/open',{
-            role_id: category,
-            first_name: fname,
-            last_name: lname,
-            email: email,
-            password: pass,
-            confirm_password: conpass,
-            roll_no: rollno
-        })
-        .then(()=>navigate('/regsuccess'))
-        .catch(error=>{alert(error.response.data.detail);return})
+        console.log(category, fname, lname, email, pass, conpass, rollno)
+        // axios.post('http://localhost:8000/api/v1/users/open',{
+        //     role_id: category,
+        //     first_name: fname,
+        //     last_name: lname,
+        //     email: email,
+        //     password: pass,
+        //     confirm_password: conpass,
+        //     roll_no: rollno
+        // })
+        // .then(()=>navigate('/regsuccess'))
+        // .catch(error=>{alert(error.response.data.detail);return})
     }
 
   return (
@@ -63,9 +64,13 @@ function Ucreg() {
                     <Grid align='center' >
                     <h1 style={{padding:"20px 20px", backgroundColor: "white",color:"#008080"}}>REGISTER</h1>
                     </Grid>
+                    <Box component="div" sx={{padding: "0px 20px", display: "flex", alignItems: "center"}}>
+                    <h3>or</h3>&nbsp;
+                    <Link style={{ color:"#008080"}} to="/login">Login</Link>
+                    </Box>
                     <form onSubmit={handleSubmit} style={{padding:"20px 20px"}}>
                      <FormControl>
-                      <FormLabel >Role in the university</FormLabel>
+                      <FormLabel required>Role in the university</FormLabel>
                        <RadioGroup
                           value={category}
                           onChange={handleCat}
@@ -76,7 +81,7 @@ function Ucreg() {
                            <FormControlLabel value='2' control={<Radio />} label="Alumni" />
                         </RadioGroup>
                      </FormControl>
-                        <TextField required variant="standard" value={fname} onChange={handleFname} fullWidth label="First Name"/>
+                        <TextField required variant="standard" value={fname} onChange={handleFname} fullWidth label="First Name" />
                         <TextField required variant="standard" value={lname} onChange={handleLname} fullWidth label="Last Name"/>
                         <TextField required variant="standard" value={email} onChange={handleEmail} type="email" fullWidth label="Email"/>
                         <TextField required variant="standard" value={pass} onChange={handlePass} type="password" fullWidth label="Password"/>
