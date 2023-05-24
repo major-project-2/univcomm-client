@@ -12,6 +12,7 @@ import FormLabel from '@mui/material/FormLabel';
 import { Link, useNavigate } from "react-router-dom";
 import logo from './univcomm-logo-transparent.png';
 import { useState } from 'react';
+import axios from 'axios';
 
 const paperStyle={ padding:"30px 20px", width:500, margin:"50px auto"}
 
@@ -34,18 +35,21 @@ function Ucreg() {
     const navigate=useNavigate();
     function handleSubmit(e){
         e.preventDefault();
-        console.log(category, fname, lname, email, pass, conpass, rollno)
-        // axios.post('http://localhost:8000/api/v1/users/open',{
-        //     role_id: category,
-        //     first_name: fname,
-        //     last_name: lname,
-        //     email: email,
-        //     password: pass,
-        //     confirm_password: conpass,
-        //     roll_no: rollno
-        // })
-        // .then(()=>navigate('/regsuccess'))
-        // .catch(error=>{alert(error.response.data.detail);return})
+        
+          axios.post('http://localhost:8000/api/v1/users/open',{
+              role_id: parseInt(category),
+              first_name: fname,
+              last_name: lname,
+              email: email,
+              password: pass,
+              confirm_password: conpass,
+              roll_no: rollno
+          })
+          .then(()=>navigate('/regsuccess'))
+          .catch(error=>{
+            alert(error.response.data.detail)
+            
+            ;return})
     }
 
   return (
@@ -76,9 +80,9 @@ function Ucreg() {
                           onChange={handleCat}
                           required
                         >
-                          <FormControlLabel value='0' control={<Radio />} label="Student" />
-                          <FormControlLabel value='1' control={<Radio />} label="Faculty" />
-                           <FormControlLabel value='2' control={<Radio />} label="Alumni" />
+                          <FormControlLabel value='1' control={<Radio />} label="Student" />
+                          <FormControlLabel value='2' control={<Radio />} label="Faculty" />
+                           <FormControlLabel value='3' control={<Radio />} label="Alumni" />
                         </RadioGroup>
                      </FormControl>
                         <TextField required variant="standard" value={fname} onChange={handleFname} fullWidth label="First Name" />
