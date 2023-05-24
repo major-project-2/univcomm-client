@@ -34,17 +34,18 @@ function Ucreg() {
     const navigate=useNavigate();
     function handleSubmit(e){
         e.preventDefault();
-        axios.post('http://localhost:8000/api/v1/users/open',{
-            role_id: category,
-            first_name: fname,
-            last_name: lname,
-            email: email,
-            password: pass,
-            confirm_password: conpass,
-            roll_no: rollno
-        })
-        .then(()=>navigate('/regsuccess'))
-        .catch(error=>{alert(error.response.data.detail);return})
+        console.log(category, fname, lname, email, pass, conpass, rollno)
+        // axios.post('http://localhost:8000/api/v1/users/open',{
+        //     role_id: category,
+        //     first_name: fname,
+        //     last_name: lname,
+        //     email: email,
+        //     password: pass,
+        //     confirm_password: conpass,
+        //     roll_no: rollno
+        // })
+        // .then(()=>navigate('/regsuccess'))
+        // .catch(error=>{alert(error.response.data.detail);return})
     }
 
   return (
@@ -65,7 +66,7 @@ function Ucreg() {
                     </Grid>
                     <Box component="div" sx={{padding: "0px 20px", display: "flex", alignItems: "center"}}>
                     <h3>or</h3>&nbsp;
-                    <Link style={{ color:"#008080"}} to="/login">LOGIN</Link>
+                    <Link style={{ color:"#008080"}} to="/login">Login</Link>
                     </Box>
                     <form onSubmit={handleSubmit} style={{padding:"20px 20px"}}>
                      <FormControl>
@@ -80,7 +81,7 @@ function Ucreg() {
                            <FormControlLabel value='2' control={<Radio />} label="Alumni" />
                         </RadioGroup>
                      </FormControl>
-                        <TextField required variant="standard" value={fname} onChange={handleFname} fullWidth label="First Name"/>
+                        <TextField required variant="standard" value={fname} onChange={handleFname} fullWidth label="First Name" />
                         <TextField required variant="standard" value={lname} onChange={handleLname} fullWidth label="Last Name"/>
                         <TextField required variant="standard" value={email} onChange={handleEmail} type="email" fullWidth label="Email"/>
                         <TextField required variant="standard" value={pass} onChange={handlePass} type="password" fullWidth label="Password"/>
