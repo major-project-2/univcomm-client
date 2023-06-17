@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import { Link, useNavigate } from "react-router-dom";
 import logo from './univcomm-logo-transparent.png';
 import { useState } from 'react';
+import axios from 'axios';
 
 const paperStyle={ padding:"30px 20px", width:500, margin:"50px auto"}
 
@@ -19,7 +20,7 @@ function Uclogin() {
     const navigate=useNavigate();
     function handleSubmit(e){
         e.preventDefault();
-        axios.post('http://localhost:8000/api/v1/login',{
+        axios.post('https://univcommserver-1-k1997936.deta.app/api/v1/login',{
             email: email,
             password: pass
         })

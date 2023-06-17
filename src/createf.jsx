@@ -11,9 +11,10 @@ import {TabContext, TabPanel, TabList} from "@mui/lab";
 
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 
-const paperStyle={ padding:"30px 20px", width:500, margin:"50px auto"}
+const paperStyle={ padding:"5px 20px", width:"100%", margin:"auto"}
 const drawerWidth = 240;
 
 function CircularProgressWithLabel(props) {
@@ -54,11 +55,11 @@ function Createf() {
       const handleContent=(e)=>{setContent(e.target.value)}
       function handleSubmitP(e){
           e.preventDefault();
-          axios.post('http://127.0.0.1:8000/api/v1/posts/',{
+          axios.post('https://univcommserver-1-k1997936.deta.app/api/v1/posts/',{
               title: title,
               content: content
           },{
-              headers:{token:localStorage.getItem("token")}
+              headers:{Authorization: `Bearer ` + localStorage.getItem('token'),}
           })
           .then(result=>{console.log(result)
               if(result.data){navigate('/dashboard')}})
@@ -68,10 +69,10 @@ function Createf() {
           const handleQues=(e)=>{setQues(e.target.value)}
           function handleSubmitQ(e){
               e.preventDefault();
-              axios.post('http://127.0.0.1:8000/api/v1/questions/',{
+              axios.post('https://univcommserver-1-k1997936.deta.app/api/v1/questions/',{
                   question: ques,
               },{
-                  headers:{token:localStorage.getItem("token")}
+                  headers:{Authorization: `Bearer ` + localStorage.getItem('token'),}
               })
               .then(result=>{console.log(result)
                   if(result.data){navigate('/dashboard')}})
@@ -121,7 +122,7 @@ function Createf() {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         setUploading(false);
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              axios.post('http://127.0.0.1:8000/api/v1/posts/11/files',{
+              axios.post('https://univcommserver-1-k1997936.deta.app/api/v1/posts/{post_id}/files',{
                   url: downloadURL,
                   name: pfile.name,
               },{
@@ -173,7 +174,7 @@ function Createf() {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         setUploading(false);
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              axios.post('http://127.0.0.1:8000/api/v1/questions/1/files',{
+              axios.post('https://univcommserver-1-k1997936.deta.app/api/v1/questions/{question_id}/files',{
                   url: downloadURL,
                   name: qfile.name,
               },{
@@ -217,7 +218,7 @@ function Createf() {
                           <Toolbar />
                           Upload files here:
                           <br />
-                          <TextField type="file" onChange={getpFile} />
+                          <TextField type="file" onChange={getpFile}  accept=".jpg, .jpeg, .png, .pdf"/>
                           <br />
                           <Button onClick={uploadpFile}>Upload</Button>
                           <Toolbar />
@@ -245,7 +246,7 @@ function Createf() {
                           <Toolbar />
                           Upload files here (Optional):
                           <br />
-                          <TextField type="file" onChange={getqFile} />
+                          <TextField type="file" onChange={getqFile}  accept=".jpg, .jpeg, .png, .pdf"/>
                           <br />
                           <Button onClick={uploadqFile}>Upload</Button>
                           <Toolbar />

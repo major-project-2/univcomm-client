@@ -43,6 +43,11 @@ function Dashboard(props) {
 
   const navigate=useNavigate();
 
+  function Logout(){
+    localStorage.removeItem("token")
+    navigate('/')
+}
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -74,7 +79,7 @@ function Dashboard(props) {
          </Badge>
          </IconButton>
          <Toolbar/>
-         <Button >LOG OUT</Button>
+         <Button onClick={Logout}>LOG OUT</Button>
          </>
       </Toolbar>
       </AppBar>
@@ -97,7 +102,7 @@ function Dashboard(props) {
           }}
         >
            <List sx={{backgroundColor:"#014D4E",color:"white" ,height:"100%"}}>
-          <ListItem sx={{display:"flex",justifyContent:"center",marginBottom:"5vh"}}>
+          <ListItem sx={{display:"flex",justifyContent:"center",marginBottom:"5vh"}} onClick={(e)=>navigate('/dashboard/profile')}>
               <Avatar sx={{ width: 56, height: 56, marginTop:"5vh"}}>
                 <AccountBoxIcon />
               </Avatar>
@@ -129,14 +134,6 @@ function Dashboard(props) {
           </ListItemButton>
       </ListItem>
     
-      <ListItem disablePadding onClick={(e)=>navigate('/dashboard/saved')}>
-          <ListItemButton>
-            <ListItemIcon sx={{color:"white"}}>
-            <BookmarkIcon />
-            </ListItemIcon>
-            <ListItemText primary=" Saved" />
-          </ListItemButton>
-      </ListItem>
   
       </List>
         </Drawer>
@@ -149,7 +146,7 @@ function Dashboard(props) {
           open
         >
            <List sx={{backgroundColor:"#014D4E",color:"white" ,height:"100%"}}>
-          <ListItem sx={{display:"flex",justifyContent:"center",marginBottom:"5vh"}}>
+          <ListItem sx={{display:"flex",justifyContent:"center",marginBottom:"5vh"}} onClick={(e)=>navigate('/dashboard/profile')}>
               <Avatar sx={{ width: 56, height: 56, marginTop:"5vh"}}>
                 <AccountBoxIcon />
               </Avatar>
@@ -181,14 +178,7 @@ function Dashboard(props) {
           </ListItemButton>
       </ListItem>
       
-      <ListItem disablePadding onClick={(e)=>navigate('/dashboard/saved')}>
-          <ListItemButton>
-            <ListItemIcon sx={{color:"white"}}>
-            <BookmarkIcon />
-            </ListItemIcon>
-            <ListItemText primary=" Saved" />
-          </ListItemButton>
-      </ListItem>
+      
       
       </List>
         </Drawer>

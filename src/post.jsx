@@ -1,6 +1,6 @@
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
-import image from './blackbird-gc0bad9d5d_1920.jpg'
+// import image from './blackbird-gc0bad9d5d_1920.jpg'
 import { Grid, Tab, Box, Toolbar, Divider, Avatar, List, ListItem, TextField } from "@mui/material";
 
 import {Card, CardContent, CardHeader, CardMedia, CardActions} from '@mui/material';
@@ -35,29 +35,29 @@ function PostQ() {
      const [hraise,setHraise] = useState(false);
      const [hrcount,setHrcount] = useState(0);
 
-     const handleDownvote = (e, postId) => {
+     const handleDownvote = (e, post_id) => {
       if(!dnvote){
         setDnvote(true);
         setDncount(dncount+1);
-        addDownvote(postId);
+        addDownvote(post_id);
       }
       else{
         setDnvote(false);
         setDncount(dncount-1);
-        removeDownvote(postId);
+        removeDownvote(post_id);
       }
      }
 
-     const handleUpvote = (e, postId) => {
+     const handleUpvote = (e, post_id) => {
       if(!upvote){
         setUpvote(true);
         setUpcount(upcount+1);
-        addUpvote(postId);
+        addUpvote(post_id);
       }
       else{
         setUpvote(false);
         setUpcount(upcount-1);
-        removeUpvote(postId);
+        removeUpvote(post_id);
       }
      }
 
@@ -85,58 +85,59 @@ function PostQ() {
     }, [upvote, dnvote]);
 
      const getPosts = async () => {
-      const result = await axios.get("http://127.0.0.1:8000/api/v1/posts", {
+      const result = await axios.get("https://univcommserver-1-k1997936.deta.app/api/v1/posts", {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODUyNTg2MjksInN1YiI6IjQ3IiwiZGlzcGxheU5hbWUiOiJIciBhbHVtbmkifQ.dZLz1eCq_blj7ayi9hfQT0LQCLVn3gGLPWPsr6mx9hM`,
+          Authorization: `Bearer ` + localStorage.getItem('token'),
         },
       });
   
       setPosts(result.data);
+      console.log(result);
     };
   
-    const removeDownvote = async (postId) => {
+    const removeDownvote = async (post_id) => {
       const result = await axios.delete(
-        `http://127.0.0.1:8000/api/v1/posts/${postId}/downvote`,
+        `https://univcommserver-1-k1997936.deta.app/api/v1/posts/${post_id}/downvote`,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODUyNTg2MjksInN1YiI6IjQ3IiwiZGlzcGxheU5hbWUiOiJIciBhbHVtbmkifQ.dZLz1eCq_blj7ayi9hfQT0LQCLVn3gGLPWPsr6mx9hM`,
+            Authorization: `Bearer ` + localStorage.getItem('token'),
           },
         }
       );
   
     };
 
-    const addDownvote = async (postId) => {
+    const addDownvote = async (post_id) => {
       const result = await axios.post(
-        `http://127.0.0.1:8000/api/v1/posts/${postId}/downvote`,
+        `https://univcommserver-1-k1997936.deta.app/posts/api/v1/${post_id}/downvote`,
         {},
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODUyNTg2MjksInN1YiI6IjQ3IiwiZGlzcGxheU5hbWUiOiJIciBhbHVtbmkifQ.dZLz1eCq_blj7ayi9hfQT0LQCLVn3gGLPWPsr6mx9hM`,
+            Authorization: `Bearer ` + localStorage.getItem('token'),
           },
         }
       );
     };
 
-      const removeUpvote = async (postId) => {
+      const removeUpvote = async (post_id) => {
         const result = await axios.delete(
-          `http://127.0.0.1:8000/api/v1/posts/${postId}/upvote`,
+          `https://univcommserver-1-k1997936.deta.app/posts/api/v1/${post_id}/upvote`,
           {
             headers: {
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODUyNTg2MjksInN1YiI6IjQ3IiwiZGlzcGxheU5hbWUiOiJIciBhbHVtbmkifQ.dZLz1eCq_blj7ayi9hfQT0LQCLVn3gGLPWPsr6mx9hM`,
+              Authorization: `Bearer ` + localStorage.getItem('token'),
             },
           }
         );
 
       };
 
-      const addUpvote = async (postId) => {
+      const addUpvote = async (post_id) => {
         const result = await axios.post(
-          `http://127.0.0.1:8000/api/v1/posts/${postId}/upvote`,
+          `https://univcommserver-1-k1997936.deta.app/posts/api/v1/${post_id}/upvote`,
           {},
           {
             headers: {
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODUyNTg2MjksInN1YiI6IjQ3IiwiZGlzcGxheU5hbWUiOiJIciBhbHVtbmkifQ.dZLz1eCq_blj7ayi9hfQT0LQCLVn3gGLPWPsr6mx9hM`,
+              Authorization: `Bearer ` + localStorage.getItem('token'),
             },
           }
         );
@@ -146,22 +147,24 @@ function PostQ() {
       const [query, setQuery]= useState(null);
 
       function Getquery(){
-        axios.get('http://127.0.0.1:8000/api/v1/questions',{
-              headers:{token:localStorage.getItem("token")}
+        axios.get('https://univcommserver-1-k1997936.deta.app/api/v1/questions',{
+              headers:{
+                Authorization: `Bearer ` + localStorage.getItem('token'),
+              }
           })
           .then(result=>{console.log(result)
-              if(result.data){setQuery(result.data.questions)}})
-          .catch(error=>{alert(error.response.data.detail);navigate('/login')})
+              if(result.data){setQuery(result.data)}})
+          .catch(error=>{alert(error.response.data.detail);})
       }
 
       const [comm, setComment]= useState("")
       const handleComment=(e)=>{setComment(e.target.value)}
       function addComment(e){
         e.preventDefault();
-        axios.post('http://127.0.0.1:8000/api/v1/postshttp://127.0.0.1:8000/api/v1/posts/6/comments/',{
+        axios.post('https://univcommserver-1-k1997936.deta.app/api/v1/posts/${post_id}/comments/',{
               comment:comm
           },{
-              headers:{token:localStorage.getItem("token")}
+              headers:{Authorization: `Bearer ` + localStorage.getItem('token'),}
           })
           .then(result=>{pass})
           .catch(error=>{alert(error.response.data.detail);return})
@@ -178,35 +181,23 @@ function PostQ() {
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', color:"#008080"}}>
           <TabList onChange={handleChange} centered textColor="inherit" TabIndicatorProps={{style: {backgroundColor: "#008080"}}}>
-            <Tab label="All" value="1" />
-            <Tab label="Post" value="2" />
-            <Tab label="Query" value="3" />
+            {/* <Tab label="All" value="1" /> */}
+            <Tab label="Post" value="1" />
+            <Tab label="Query" value="2" />
           </TabList>
         </Box>
         <TabPanel value="1">
+
+          {posts.map((p) => 
+        <>
         <Card sx={{marginBottom:"5vh"}}>
       <CardHeader
-        avatar={
-          <Avatar aria-label="recipe">
-            R
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
-      />
-      <CardMedia
-        component="img"
-        image={image}
-        alt="Paella dish"
-        sx={{ padding: "1em 1em 0 1em", objectFit: "contain" }}
+        title={p.title}
+        subheader={p.user.first_name+" "+p.user.last_name}
       />
       <CardContent >
-        <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h4>
+        <p>{p.content}</p><br/>
+        <a href={p.post_files.url}>{p.post_files.name}</a>
       </CardContent>
       <CardActions sx={{padding:'0px',color:"#008080"}}>
        
@@ -235,66 +226,100 @@ function PostQ() {
           <AddCommentIcon />
         </IconButton> 
             </ListItem>
+            {p.comments.map((c)=><>
             <ListItem>
           <Typography>  
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            {c.comment}
           </Typography>
           </ListItem>
           <Divider/>
-          <ListItem>
-          <Typography>  
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-          </ListItem>
+          </>)}
           </List>
         </AccordionDetails>
       </Accordion>
-    
-      
+     
     </Card>
+    </>
+        )}
         </TabPanel>
         <TabPanel value="2">
-        {posts.map((p) => (
+          {query&&query.map((q)=>
         <>
         <Card sx={{marginBottom:"5vh"}}>
       <CardHeader
-        avatar={
-          <Avatar aria-label="recipe">
-            {p.user.first_name[0]}
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={p.title}
-        subheader={p.user.first_name+" "+p.user.last_name+" "+p.user.roll_no}
-       />
-      <CardMedia
-        component="img"
-        image={image}
-        alt="Paella dish"
-        sx={{ padding: "1em 1em 0 1em", objectFit: "contain" }}
+        title={q.user.first_name+" "+q.user.last_name}
+        subheader={"Roll.no: "+q.user.roll_no}
       />
       <CardContent >
-      <Typography variant="body2" color="text.secondary">
-               
-               {p.content}
-              </Typography>
+        <p>{q.question}</p>
+      </CardContent>
+      <CardActions sx={{padding:'0px',color:"#008080"}}>
+        <IconButton aria-label="handraise" onClick={handleRaise} color="inherit">
+          <BackHandIcon /><h6>{hrcount} Handraise</h6>
+        </IconButton>
+      </CardActions>
+        <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Answers</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <List>
+            <ListItem>
+              <TextField type="text" value={comm} onChange={handleComment} fullWidth label="Type your comment here"/>
+              <IconButton aria-label="comment" onClick={addComment} color="inherit">
+          <AddCommentIcon />
+        </IconButton> 
+            </ListItem>
+            {q.answers.map((a)=><>
+            <ListItem>
+          <Typography>  
+           {a.answer}
+          </Typography>
+          </ListItem>
+          <Divider/>
+          </>)}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+      
+    </Card>
+    </>)}
+        </TabPanel>
+      </TabContext>
+      </Grid>
+      </Box>
+  );
+}
+
+export default PostQ;
+
+{/* <TabPanel value="1">
+        <Card sx={{marginBottom:"5vh"}}>
+      <CardHeader
+        title="College Placement Checklist"
+        subheader="Dev Patel, Alumni"
+      />
+      <CardContent >
+        <p>1. Dress to impress
+2. Speak with body language
+3. Work on your communication skills
+4. Organize all the documents in a folder
+5. Get enough sleep</p>
       </CardContent>
       <CardActions sx={{padding:'0px',color:"#008080"}}>
        
         <IconButton aria-label="upvote" onClick={handleUpvote} color="inherit">
           <ArrowUpwardIcon />
         </IconButton>
-        <h4>{upcount} Upvote</h4>
+        <h4>32 Upvote</h4>
         <IconButton aria-label="downvote" onClick={handleDownvote} color="inherit">
           <ArrowDownwardIcon />
         </IconButton>
-        <h4>{dncount} Downvote</h4>
+        <h4>2 Downvote</h4>
         </CardActions>
         <Accordion>
         <AccordionSummary
@@ -307,16 +332,20 @@ function PostQ() {
         <AccordionDetails>
           <List>
             <ListItem>
+              <TextField type="text" value={comm} onChange={handleComment} fullWidth label="Type your comment here"/>
+              <IconButton aria-label="comment" onClick={addComment} color="inherit">
+          <AddCommentIcon />
+        </IconButton> 
+            </ListItem>
+            <ListItem>
           <Typography>  
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            Thank you Sir.
           </Typography>
           </ListItem>
           <Divider/>
           <ListItem>
           <Typography>  
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            These tips are really helpful thank you so much Sir.
           </Typography>
           </ListItem>
           </List>
@@ -324,46 +353,53 @@ function PostQ() {
       </Accordion>
     
       
-        </Card>
-        </>
-        ))}
+    </Card>
         </TabPanel>
-
-        <TabPanel value="3">
-        {query&&query.map((question)=>
-        <>
+        <TabPanel value="2">
         <Card sx={{marginBottom:"5vh"}}>
       <CardHeader
-        avatar={
-          <Avatar aria-label="recipe">
-            {question.user.first_name[0]}
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title="Query"
-        subheader={question.user.first_name+" "+question.user.last_name+" "+question.user.roll_no}
+        title="Kabir Gupta, Student"
+        subheader="Roll.no: 165234789"
       />
-      <CardContent>
-      <Typography variant="body2" color="text.secondary">
-               {question.question}
-      </Typography>
+      <CardContent >
+        <p>Can anyone suggest any good youtube resource to study DSA in Python?</p>
       </CardContent>
-      <CardActions disableSpacing sx={{color:"#008080"}}>
+      <CardActions sx={{padding:'0px',color:"#008080"}}>
         <IconButton aria-label="handraise" onClick={handleRaise} color="inherit">
-          <BackHandIcon /><h6>{hrcount} Handraise</h6>
+          <BackHandIcon /><h6>18 Handraise</h6>
         </IconButton>
       </CardActions>
+        <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>Answers</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <List>
+            <ListItem>
+              <TextField type="text" value={comm} onChange={handleComment} fullWidth label="Type your comment here"/>
+              <IconButton aria-label="comment" onClick={addComment} color="inherit">
+          <AddCommentIcon />
+        </IconButton> 
+            </ListItem>
+            <ListItem>
+          <Typography>  
+           There is a youtube channel called CampusX where you can find a playlist on Python.
+          </Typography>
+          </ListItem>
+          <Divider/>
+          <ListItem>
+          <Typography>  
+            Freecodecamp is a great resource. If you want to learn in hindi you can check CodewithHarry.
+          </Typography>
+          </ListItem>
+          </List>
+        </AccordionDetails>
+      </Accordion>
+    
+      
     </Card>
-    </>)}
-        </TabPanel>
-      </TabContext>
-      </Grid>
-      </Box>
-  );
-}
-
-export default PostQ;
+        </TabPanel> */}
