@@ -48,6 +48,13 @@ function Createf() {
 
       const [value, setValue] = useState('1');
 
+      const [pFileDownloadURL, setPFileDownloadURL] = useState("")
+      const [qFileDownloadURL, setQFileDownloadURL] = useState("")
+
+      const [pFileName, setPFileName] = useState("")
+      const [qFileName, setQFileName] = useState("")
+
+
       const navigate=useNavigate();
       const [title, setTitle]= useState("")
       const [content, setContent]= useState("")
@@ -62,7 +69,20 @@ function Createf() {
               headers:{Authorization: `Bearer ` + localStorage.getItem('token'),}
           })
           .then(result=>{console.log(result)
-              if(result.data){navigate('/dashboard')}})
+              if(result.data){
+                
+                axios.post(`https://univcommserver-1-k1997936.deta.app/api/v1/posts/${result.data.id}/files`,{
+                  url: pFileDownloadURL,
+                  name: pFileName,
+              },{
+                headers:{Authorization: `Bearer ` + localStorage.getItem('token'),}
+              })
+              .then(result=>{console.log(result)
+                  if(result.data){
+                    navigate('/dashboard')
+                  }})
+              .catch(error=>{alert(error.response.data.detail);return})
+              }})
           .catch(error=>{alert(error.response.data.detail);return})}
 
           const [ques, setQues]= useState("")
@@ -75,12 +95,30 @@ function Createf() {
                   headers:{Authorization: `Bearer ` + localStorage.getItem('token'),}
               })
               .then(result=>{console.log(result)
-                  if(result.data){navigate('/dashboard')}})
+                  if(result.data){
+
+                    axios.post(`https://univcommserver-1-k1997936.deta.app/api/v1/questions/${result.data.id}/files`,{
+                      url: qFileDownloadURL,
+                      name: qFileName,
+                  },{
+                    headers:{Authorization: `Bearer ` + localStorage.getItem('token'),}
+                  })
+                  .then(result=>{console.log(result)
+                      if(result.data){
+                        navigate('/dashboard')
+                      }})
+                  .catch(error=>{alert(error.response.data.detail);return})
+                  }
+                
+                }
+                  
+                  )
               .catch(error=>{alert(error.response.data.detail);return})
           }
 
           const [pfile, setpFile] = useState(null);
           const [qfile, setqFile] = useState(null);
+
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
 
@@ -122,15 +160,8 @@ function Createf() {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         setUploading(false);
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              axios.post('https://univcommserver-1-k1997936.deta.app/api/v1/posts/{post_id}/files',{
-                  url: downloadURL,
-                  name: pfile.name,
-              },{
-                  headers:{token:localStorage.getItem("token")}
-              })
-              .then(result=>{console.log(result)
-                  if(result.data){pass}})
-              .catch(error=>{alert(error.response.data.detail);return})
+             setPFileDownloadURL(downloadURL)
+             setPFileName(pfile.name)
         });
       }
     );
@@ -174,15 +205,8 @@ function Createf() {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         setUploading(false);
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              axios.post('https://univcommserver-1-k1997936.deta.app/api/v1/questions/{question_id}/files',{
-                  url: downloadURL,
-                  name: qfile.name,
-              },{
-                  headers:{token:localStorage.getItem("token")}
-              })
-              .then(result=>{console.log(result)
-                  if(result.data){pass}})
-              .catch(error=>{alert(error.response.data.detail);return})
+             setQFileDownloadURL(downloadURL)
+             setQFileName(qfile.name)
         });
       }
     );

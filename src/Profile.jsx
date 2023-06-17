@@ -7,8 +7,15 @@ import axios from 'axios';
 import Sdata from './Sdata';
 import Fdata from './Fdata';
 import Aldata from './Aldata';
+import { Co2Sharp } from '@mui/icons-material';
 
 const drawerWidth = 240;
+
+const roles = {
+  1: "Student",
+  2: "Faculty",
+  3: "Alumni"
+}
 
 
 function Profile() {
@@ -24,8 +31,8 @@ function Profile() {
     getProfile();
   },[fname, lname,email,rollno])
 
-const getProfile = async (user_id) => {
-  const result = await axios.get("https://univcommserver-1-k1997936.deta.app/api/v1/users/${user_id}", {
+const getProfile = async () => {
+  const result = await axios.get("https://univcommserver-1-k1997936.deta.app/api/v1/users/me", {
     headers: {
       Authorization: `Bearer ` + localStorage.getItem('token'),
     },
@@ -43,17 +50,14 @@ const getProfile = async (user_id) => {
 
 function roleprofile(role){
   switch(role) {
-    case 0:
-      return(<Sdata/>);
-      break;
     case 1:
-      return(<Fdata/>);
-      break;
+      return(<Sdata/>);
     case 2:
+      return(<Fdata/>);
+    case 3:
       return(<Aldata/>);
-      break;
     default:
-      return(pass);
+      return null
   }
 }
 
@@ -69,7 +73,7 @@ const navigate=useNavigate();
           NAME: {nme}
         </Typography>
         <Typography variant="h5" display="block">
-          ROLE: {role}
+          ROLE: {roles[role]}
         </Typography>
         <Typography variant="h5" display="block">
           EMAIL: {email}
@@ -77,9 +81,9 @@ const navigate=useNavigate();
         <Typography variant="h5" display="block">
         Rollno/Faculty.ID/Alumni.ID: {rollno}
         </Typography>
-        {roleprofile}
+        {roleprofile(role)}
         
-        <Button type="submit" variant="outlined" style={{margin:"20px 0px 0px 0px"}} onClick={(e)=>navigate('/profile/updateprofile')}>UPDATE PROFILE</Button>
+        <Button type="submit" variant="outlined" style={{margin:"20px 0px 0px 0px"}} onClick={(e)=>navigate('/dashboard/profile/updateprofile')}>UPDATE PROFILE</Button>
     </Grid>
     </Box>
 

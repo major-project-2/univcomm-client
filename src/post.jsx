@@ -7,6 +7,11 @@ import {Card, CardContent, CardHeader, CardMedia, CardActions} from '@mui/materi
 
 import {TabContext, TabPanel, TabList} from "@mui/lab";
 import {Accordion, AccordionDetails, AccordionSummary} from '@mui/material';
+import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
+import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
+import ArrowCircleUpTwoToneIcon from "@mui/icons-material/ArrowCircleUpTwoTone";
+import ArrowCircleDownTwoToneIcon from "@mui/icons-material/ArrowCircleDownTwoTone";
+import BackHandTwoToneIcon from '@mui/icons-material/BackHandTwoTone' 
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -21,6 +26,12 @@ import axios from 'axios';
 
 const drawerWidth = 240;
 
+const roles = {
+  1: "Student",
+  2: "Faculty",
+  3: "Alumni"
+}
+
 function PostQ() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -28,64 +39,27 @@ function PostQ() {
 
       const [value, setValue] = useState('1');
 
-     const [upvote,setUpvote] = useState(false);
-     const [upcount,setUpcount] = useState(0);
-     const [dnvote,setDnvote] = useState(false);
-     const [dncount,setDncount] = useState(0);
-     const [hraise,setHraise] = useState(false);
-     const [hrcount,setHrcount] = useState(0);
-
-     const handleDownvote = (e, post_id) => {
-      if(!dnvote){
-        setDnvote(true);
-        setDncount(dncount+1);
-        addDownvote(post_id);
-      }
-      else{
-        setDnvote(false);
-        setDncount(dncount-1);
-        removeDownvote(post_id);
-      }
-     }
-
-     const handleUpvote = (e, post_id) => {
-      if(!upvote){
-        setUpvote(true);
-        setUpcount(upcount+1);
-        addUpvote(post_id);
-      }
-      else{
-        setUpvote(false);
-        setUpcount(upcount-1);
-        removeUpvote(post_id);
-      }
-     }
-
-     const handleRaise = () => {
-      if(!hraise){
-        setHraise(true);
-        setHrcount(hrcount+1);
-      }
-      else{
-        setHraise(false);
-        setHrcount(hrcount-1);
-      }
-     }
-
      const [posts, setPosts] = useState([]);
+     const [upvotePressed, setUpvotePressed] = useState(false);
+    const [downvotePressed, setDownvotePressed] = useState(false);
+
+    const [query, setQuery]= useState([]);
+  const [handPressed, setHandPressed] = useState(false);
 
      useEffect(() => {
       getPosts();
       Getquery();
   
       return () => {
-        setUpvote(false);
-        setDnvote(false);
+        setUpvotePressed(false);
+        setDownvotePressed(false);
+
+        setHandPressed(false);
       };
-    }, [upvote, dnvote]);
+    }, [upvotePressed, downvotePressed, handPressed]);
 
      const getPosts = async () => {
-      const result = await axios.get("https://univcommserver-1-k1997936.deta.app/api/v1/posts", {
+      const result = await axios.get("https://univcommserver-1-k1997936.deta.app/api/v1/posts/", {
         headers: {
           Authorization: `Bearer ` + localStorage.getItem('token'),
         },
@@ -105,11 +79,13 @@ function PostQ() {
         }
       );
   
+    setDownvotePressed(true);
+
     };
 
     const addDownvote = async (post_id) => {
       const result = await axios.post(
-        `https://univcommserver-1-k1997936.deta.app/posts/api/v1/${post_id}/downvote`,
+        `https://univcommserver-1-k1997936.deta.app/api/v1/posts/${post_id}/downvote`,
         {},
         {
           headers: {
@@ -117,23 +93,26 @@ function PostQ() {
           },
         }
       );
+
+    setDownvotePressed(true);
     };
 
       const removeUpvote = async (post_id) => {
         const result = await axios.delete(
-          `https://univcommserver-1-k1997936.deta.app/posts/api/v1/${post_id}/upvote`,
+          `https://univcommserver-1-k1997936.deta.app/api/v1/posts/${post_id}/upvote`,
           {
             headers: {
               Authorization: `Bearer ` + localStorage.getItem('token'),
             },
           }
         );
+        setUpvotePressed(true);
 
       };
 
       const addUpvote = async (post_id) => {
         const result = await axios.post(
-          `https://univcommserver-1-k1997936.deta.app/posts/api/v1/${post_id}/upvote`,
+          `https://univcommserver-1-k1997936.deta.app/api/v1/posts/${post_id}/upvote`,
           {},
           {
             headers: {
@@ -141,13 +120,12 @@ function PostQ() {
             },
           }
         );
-    
+        setUpvotePressed(true);
       };
     
-      const [query, setQuery]= useState(null);
 
       function Getquery(){
-        axios.get('https://univcommserver-1-k1997936.deta.app/api/v1/questions',{
+        axios.get('https://univcommserver-1-k1997936.deta.app/api/v1/questions/',{
               headers:{
                 Authorization: `Bearer ` + localStorage.getItem('token'),
               }
@@ -159,16 +137,95 @@ function PostQ() {
 
       const [comm, setComment]= useState("")
       const handleComment=(e)=>{setComment(e.target.value)}
-      function addComment(e){
+      function addComment(e, post_id){
         e.preventDefault();
-        axios.post('https://univcommserver-1-k1997936.deta.app/api/v1/posts/${post_id}/comments/',{
+        axios.post(`https://univcommserver-1-k1997936.deta.app/api/v1/posts/${post_id}/comments/`,{
               comment:comm
           },{
               headers:{Authorization: `Bearer ` + localStorage.getItem('token'),}
           })
-          .then(result=>{pass})
+          .then(result=>{
+            console.log(result.data)
+            getPosts()
+            setComment("")
+          })
           .catch(error=>{alert(error.response.data.detail);return})
       }
+
+
+      const [answer, setAnswer]= useState("")
+      const handleAnswer=(e)=>{setAnswer(e.target.value)}
+      function addAnswer(e, question_id){
+        e.preventDefault();
+        axios.post(`https://univcommserver-1-k1997936.deta.app/api/v1/questions/${question_id}/answers/`,{
+              answer:answer
+          },{
+              headers:{Authorization: `Bearer ` + localStorage.getItem('token'),}
+          })
+          .then(result=>{
+            console.log(result.data)
+            Getquery()
+            setAnswer("")
+          })
+          .catch(error=>{alert(error.response.data.detail);return})
+      }
+    
+      const aUpvote = (e, postId) => {
+        addUpvote(postId);
+      };
+    
+      
+    
+      const rUpvote = (e, postId) => {
+        removeUpvote(postId);
+      };
+    
+   
+    
+      const aDownvote = (e, postId) => {
+        addDownvote(postId);
+      };
+   
+      
+      const rDownvote = (e, postId) => {
+        removeDownvote(postId);
+      };
+
+      
+  const addHandRaise = async (questionId) => {
+    const result = await axios.post(
+      `https://univcommserver-1-k1997936.deta.app/api/v1/questions/${questionId}/hand-raise`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ` + localStorage.getItem('token'),
+        },
+      }
+    );
+
+    setHandPressed(true);
+  };
+
+  const aHandRaise = (e, questionId) => {
+    addHandRaise(questionId);
+  };
+
+  const removeHandRaise = async (questionId) => {
+    const result = await axios.delete(
+      `https://univcommserver-1-k1997936.deta.app/api/v1/questions/${questionId}/hand-raise`,
+      {
+        headers: {
+          Authorization: `Bearer ` + localStorage.getItem('token'), },
+      }
+    );
+
+    setHandPressed(true);
+  };
+
+  const rHandRaise = (e, questionId) => {
+    removeHandRaise(questionId);
+  };
+
 
   return (
     
@@ -193,22 +250,46 @@ function PostQ() {
         <Card sx={{marginBottom:"5vh"}}>
       <CardHeader
         title={p.title}
-        subheader={p.user.first_name+" "+p.user.last_name}
+        subheader={`${p.user.first_name} ${p.user.last_name} (${roles[p.user.role_id]})`}
       />
       <CardContent >
         <p>{p.content}</p><br/>
-        <a href={p.post_files.url}>{p.post_files.name}</a>
+        {p.post_files.map((file) => (<>
+          <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
+        </>))}
       </CardContent>
       <CardActions sx={{padding:'0px',color:"#008080"}}>
-       
-        <IconButton aria-label="upvote" onClick={handleUpvote} color="inherit">
-          <ArrowUpwardIcon />
-        </IconButton>
-        <h4>{upcount} Upvote</h4>
-        <IconButton aria-label="downvote" onClick={handleDownvote} color="inherit">
-          <ArrowDownwardIcon />
-        </IconButton>
-        <h4>{dncount} Downvote</h4>
+   
+
+        <IconButton
+            onClick={(e) =>
+              p.user_upvoted ? rUpvote(e, p.id) : aUpvote(e, p.id)
+            }
+            color="inherit"
+          >
+            {p.user_upvoted ? (
+              <ArrowCircleUpIcon />
+            ) : (
+              <ArrowUpwardIcon />
+            )}
+          </IconButton>
+          <h4> {p.user_upvotes.length} Upvote</h4>
+
+          <IconButton
+            onClick={(e) =>
+              p.user_downvoted ? rDownvote(e, p.id) : aDownvote(e, p.id)
+            }
+            color="inherit"
+          >
+            {p.user_downvoted ? (
+              <ArrowCircleDownIcon />
+            ) : (
+              <ArrowDownwardIcon  />
+            )}
+          </IconButton>
+          <h4>  {p.user_downvotes.length} Downvote</h4>
+
+
         </CardActions>
         <Accordion>
         <AccordionSummary
@@ -221,15 +302,17 @@ function PostQ() {
         <AccordionDetails>
           <List>
             <ListItem>
-              <TextField type="text" value={comm} onChange={handleComment} fullWidth label="Type your comment here"/>
-              <IconButton aria-label="comment" onClick={addComment} color="inherit">
+              <TextField type="text" value={comm} onChange={handleComment} fullWidth label="Type your comment here..."/>
+              <IconButton aria-label="comment" onClick={(e)=> addComment(e, p.id)} color="inherit">
           <AddCommentIcon />
         </IconButton> 
+        
             </ListItem>
             {p.comments.map((c)=><>
             <ListItem>
           <Typography>  
-            {c.comment}
+
+            {`${c.user.first_name} ${c.user.last_name}: ${c.comment}`}
           </Typography>
           </ListItem>
           <Divider/>
@@ -252,13 +335,29 @@ function PostQ() {
       />
       <CardContent >
         <p>{q.question}</p>
+        <br/>
+        { q.question_files.map((file) => (<>
+          <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
+        </>))}
       </CardContent>
       <CardActions sx={{padding:'0px',color:"#008080"}}>
-        <IconButton aria-label="handraise" onClick={handleRaise} color="inherit">
-          <BackHandIcon /><h6>{hrcount} Handraise</h6>
+        <IconButton aria-label="handraise" 
+        
+        onClick={(e) =>
+          q.user_hand_raised ? rHandRaise(e, q.id) : aHandRaise(e, q.id)
+        }
+        color="inherit">
+
+          {q.user_hand_raised ? (
+              <BackHandIcon  />
+            ) : (
+              <BackHandTwoToneIcon />
+            )}
+     
         </IconButton>
+        <h4>{q.user_raises.length} Handraise</h4>
       </CardActions>
-        <Accordion>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -269,15 +368,17 @@ function PostQ() {
         <AccordionDetails>
           <List>
             <ListItem>
-              <TextField type="text" value={comm} onChange={handleComment} fullWidth label="Type your comment here"/>
-              <IconButton aria-label="comment" onClick={addComment} color="inherit">
+              <TextField type="text" value={answer} onChange={handleAnswer} fullWidth label="Type your answer here..."/>
+              <IconButton aria-label="answer" onClick={(e)=> addAnswer(e, q.id)} color="inherit">
           <AddCommentIcon />
         </IconButton> 
+        
             </ListItem>
             {q.answers.map((a)=><>
             <ListItem>
           <Typography>  
-           {a.answer}
+
+            {`${a.user.first_name} ${a.user.last_name}: ${a.answer}`}
           </Typography>
           </ListItem>
           <Divider/>
