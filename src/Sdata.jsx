@@ -19,7 +19,7 @@ function Sdata() {
   },[branch, semester, dept])
 
 const getsdata = async () => {
-  const result = await axios.get("https://univcommserver-1-k1997936.deta.app/api/v1/users/student", {
+  const result = await axios.get("https://univcommserver-1-k1997936.deta.app/api/v1/users/data/student", {
     headers: {
       Authorization: `Bearer ` + localStorage.getItem('token'),
     },

@@ -2,7 +2,7 @@ import React from 'react'
 import {Grid} from '@mui/material';
 import {Box, Toolbar, Typography, Button} from '@mui/material'
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation} from 'react-router-dom';
 import axios from 'axios';
 import Sdata from './Sdata';
 import Fdata from './Fdata';
@@ -19,6 +19,7 @@ const roles = {
 
 
 function Profile() {
+  const location = useLocation()
 
   const [fname, setFname]= useState("")
   const [lname, setLname]= useState("")
@@ -29,7 +30,7 @@ function Profile() {
 
   useEffect(()=>{
     getProfile();
-  },[fname, lname,email,rollno])
+  },[location.pathname])
 
 const getProfile = async () => {
   const result = await axios.get("https://univcommserver-1-k1997936.deta.app/api/v1/users/me", {
@@ -62,32 +63,39 @@ function roleprofile(role){
 }
 
 const navigate=useNavigate();
-  return (
-    <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-      >
-    <Toolbar/>
-    <Grid item xs={8}>
-      <Typography variant="h5" display="block">
-          NAME: {nme}
-        </Typography>
-        <Typography variant="h5" display="block">
-          ROLE: {roles[role]}
-        </Typography>
-        <Typography variant="h5" display="block">
-          EMAIL: {email}
-        </Typography>
-        <Typography variant="h5" display="block">
-        Rollno/Faculty.ID/Alumni.ID: {rollno}
-        </Typography>
-        {roleprofile(role)}
-        
-        <Button type="submit" variant="outlined" style={{margin:"20px 0px 0px 0px"}} onClick={(e)=>navigate('/dashboard/profile/updateprofile')}>UPDATE PROFILE</Button>
-    </Grid>
-    </Box>
 
+if (location.pathname === "/dashboard/profile" ){
+  return (
+<Box
+component="main"
+sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+>
+<Toolbar/>
+<Grid item xs={8}>
+<Typography variant="h5" display="block">
+  NAME: {nme}
+</Typography>
+<Typography variant="h5" display="block">
+  ROLE: {roles[role]}
+</Typography>
+<Typography variant="h5" display="block">
+  EMAIL: {email}
+</Typography>
+<Typography variant="h5" display="block">
+Rollno/Faculty.ID/Alumni.ID: {rollno}
+</Typography>
+{/* {roleprofile(role)} */}
+
+<Button type="submit" variant="outlined" style={{margin:"20px 0px 0px 0px"}} onClick={(e)=>navigate('/dashboard/profile/updateprofile')}>UPDATE PROFILE</Button>
+
+
+</Grid>
+</Box>
   )
+}else{
+  return <Outlet/>
+}
+
 }
 
 export default Profile

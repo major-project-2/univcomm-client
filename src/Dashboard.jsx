@@ -75,7 +75,7 @@ function Dashboard(props) {
          <>
          <IconButton color="inherit">
             <Badge badgeContent={0} color="secondary">
-         <NotificationsIcon/>
+         {/* <NotificationsIcon/> */}
          </Badge>
          </IconButton>
          <Toolbar/>
